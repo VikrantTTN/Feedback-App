@@ -8,7 +8,10 @@ import FeedbackList from './components/feedbackList'
 import FeedbackStats from './components/FeedbackStats'
 import FeedbackForm from './components/FeedbackForm'
 import About from './pages/About'
+import AboutIconLink from './components/AboutIconLink';
+import {FeedbackProvider} from './context/ContextFeedback'
 function App() {
+    
     const [feedback, setfeedback] = useState(feedbackData)
     const deleteFeedback = (id) => {
         if (window.confirm('Are you sure you want to delete?')) { setfeedback(feedback.filter((itemToDelete) => itemToDelete.id !== id)) }
@@ -22,7 +25,8 @@ function App() {
 
 
     return (
-
+        
+        <FeedbackProvider>
         <Router>
 
             <Header text="Feedback UI" color='#ff6a95' bgColor='rgba(0,0,0,0.4)' />
@@ -38,11 +42,17 @@ function App() {
 
                     </Route>
                     <Route path='/about' element={<About />} />
+
                 </Routes>
+
+                <AboutIconLink/>
             </div>
+
+            
 
 
         </Router>
+        </FeedbackProvider>
     )
 
 }
