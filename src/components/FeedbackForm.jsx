@@ -56,12 +56,13 @@ function FeedbackForm() {
             if(feedbackEdit.edit===true){
 
                 updateFeedback(feedbackEdit.item.id,newFeedback)
-
+                
             }
             else{
                 handleAddition(newFeedback)
-            settext('')
+            
             }
+            settext('')
             
         }
 

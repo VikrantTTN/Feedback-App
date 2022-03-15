@@ -1,31 +1,31 @@
-import { createContext,useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid'
 
-const ContextFeedback=createContext();
-export const FeedbackProvider=({children})=>{
+const ContextFeedback = createContext();
+export const FeedbackProvider = ({ children }) => {
 
-    const [feedback, setFeedback] = useState([
-        {
-            content:"This is Feedback Item number One.",
-            id:1,
-            rating:10
-        },
-        {
-            content:"This is Feedback Item number Two.",
-            id:2,
-            rating:6
-        },
-        {
-            content:"This is Feedback Item number Three.",
-            id:3,
-            rating:3
-        }
-    ])
+    
+    const [isLoading, setisLoading] = useState(true)
+    const [feedback, setFeedback] = useState([])
     const [feedbackEdit, setfeedbackEdit] = useState(
-        {item:{},
-        edit:false
-    }
+        {
+            item: {},
+            edit: false
+        }
     )
+    const fetchFeedback = async () => {
+        const response = await fetch(`http://localhost:5000/feedback?_sort=id&_order=desc`)
+        const data = await response.json()
+        setFeedback(data)
+        setisLoading(false)
+    }
+    useState(() => {
+
+        fetchFeedback()
+
+    }, [])
+
+
 
     const handleAddition = (addFeedback) => {
         addFeedback.id = uuidv4()
@@ -37,32 +37,33 @@ export const FeedbackProvider=({children})=>{
         //Returns an array of feedback item deleting the one with the id that matched.
     }
 
-    const editFeedback=(item)=>{
+    const editFeedback = (item) => {
         setfeedbackEdit({
             item,
-            edit:true
+            edit: true
         })
     }
 
-    const updateFeedback=(id,updItem)=>{
+    const updateFeedback = (id, updItem) => {
 
 
-setFeedback(
-    feedback.map((item)=>
-    (item.id===id?{...item,...updItem}:item)
-))
+        setFeedback(
+            feedback.map((item) =>
+                (item.id === id ? { ...item, ...updItem } : item)
+            ))
 
     }
 
-    return(
+    return (
         <ContextFeedback.Provider value={{
             feedback,
             deleteFeedback,
             handleAddition,
             editFeedback,
             feedbackEdit,
-            updateFeedback}}>
-            
+            updateFeedback
+        }}>
+
             {children}
 
         </ContextFeedback.Provider>
